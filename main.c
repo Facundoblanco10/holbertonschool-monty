@@ -9,7 +9,7 @@ int main (int argc, char * argv[])
 {
 	char *buf = NULL;
 	size_t len = 0;
-	const char *file = argv[1];
+	FILE *namef;
 	(void)argc;
 
 	if (!argv[1])
@@ -23,7 +23,12 @@ int main (int argc, char * argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	getline(&buf, &len, file2);
+	namef = fopen(argv[1], "r");
+
+	if (!namef)
+		printf("ERROR");
+
+	getline(&buf, &len, namef);
 
 	printf("\nthis is the getline: %s\n", buf);
 
