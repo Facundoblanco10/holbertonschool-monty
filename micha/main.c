@@ -7,9 +7,21 @@
 int main (int argc, char * argv[])
 {
 	FILE *name_of_file;
-	char buf[256], *token1, *token2;
-	int len = 255, val = 0, c;
+	int len = 255;
+	int value = 0;
+	int line = 1;
+	char buf[256];
+	char *token1;
+	char *token2;
+	char *buf;
+	char *buf_dup;
 	(void)argc;
+
+	instruction_t functions[] = {
+		{"push", push()}
+		{"pall", pall()}
+		{"\0", NULL}
+	};
 
 	if (!argv[1])
 	{
@@ -21,31 +33,27 @@ int main (int argc, char * argv[])
 
 	if (name_of_file == NULL)
 	{
-		printf("Error to open the file");
+		printf("Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
-
 	while (fgets(buf, len, name_of_file) != NULL)
 	{
-		strtok(buf, "\n");
-		token1 = strtok(buf, " \t");
+		token1 = strtok(buf_dup, " \t");
 		token2 = strtok(NULL, " \t");
-		if (token2 != '0')
+		if (token2[0] != '0')
+			value = atoi(token2);
+/*
+		while (functions[i] != NULL)
 		{
-			val = atoi(token2);
-			if (val == 0)
+			if(strcmp(functions[i][0], token1) == 0)
 			{
-				printf("L%d: usage: push integer", c)
-				exit(EXIT_FAILURE)
+				ejecutar la funcion correspondiente
 			}
 		}
-		if (!token)
-			break;
-
-	printf("%s %d\n", token1, val);
-		printf("This is the line readed: %s", token1);
+		printf("L%d: unknown instruction %s", line, token1);
+*/
+		line++;
 	}
-
 	fclose(name_of_file);
 
 	return (0);
