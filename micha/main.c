@@ -25,11 +25,11 @@ int main (int argc, char * argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	fgets(buf, len, name_of_file);
+	while (fgets(buf, len, name_of_file) != NULL)
+		printf("This is the line readed: %s", buf);
 
 
 	fclose(name_of_file);
 
-	printf("This is the line readed: %s", buf);
 	return (0);
 }
