@@ -8,7 +8,7 @@ int main (int argc, char * argv[])
 {
 	FILE *name_of_file;
 	int len = 255;
-	int value;
+	int value = 0;
 	int line = 1;
 	char buf[256];
 	char *token1;
@@ -40,16 +40,18 @@ int main (int argc, char * argv[])
 	{
 		token1 = strtok(buf_dup, " \t");
 		token2 = strtok(NULL, " \t");
-		value = atoi(token2);
-
+		if (token2[0] != '0')
+			value = atoi(token2);
+/*
 		while (functions[i] != NULL)
 		{
 			if(strcmp(functions[i][0], token1) == 0)
 			{
-				/* ejecutar la funcion correspondiente */
+				ejecutar la funcion correspondiente
 			}
 		}
 		printf("L%d: unknown instruction %s", line, token1);
+*/
 		line++;
 	}
 	fclose(name_of_file);
