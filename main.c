@@ -15,7 +15,7 @@ int main (int argc, char * argv[])
 
 	if (!argv[1])
 	{
-		printf("USAGE: monty file");
+		printf("USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 	if(access(argv[1], F_OK) == 0)
@@ -27,7 +27,6 @@ int main (int argc, char * argv[])
 	namef = fopen(argv[1], "r");
 
 	if (!namef)
-		printf("ERROR");
 
 	getline(&buf, &len, namef);
 
