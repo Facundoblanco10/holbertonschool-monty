@@ -1,6 +1,4 @@
 #include "monty.h"
-#include <stdio.h>
-
 /**
  *
  *
@@ -8,9 +6,9 @@
  */
 int main (int argc, char * argv[])
 {
-	int input;
-	char buf[1024];
-	size_t len = 0;
+	FILE *name_of_file;
+	char buf[256];
+	int len = 255;
 	(void)argc;
 
 	if (!argv[1])
@@ -18,18 +16,20 @@ int main (int argc, char * argv[])
 		printf("USAGE: monty file");
 		exit(EXIT_FAILURE);
 	}
-	if(access(argv[1], F_OK) == 0)
+
+	name_of_file = fopen(argv[1], "r");
+
+	if (name_of_file == NULL)
 	{
-		printf("Error: Can't open file %s", argv[1]);
+		printf("Error to open the file");
 		exit(EXIT_FAILURE);
 	}
-	if (!namef)
-	{
-		printf("ERROR");
-		exit(EXIT_FAILURE);
-	}
-	
-	input = open(argv[1], O_RDONLY);
-	char_save = read(input,buf,1024);
+
+	while (fgets(buf, len, name_of_file) != NULL)
+		printf("This is the line readed: %s", buf);
+
+
+	fclose(name_of_file);
+
 	return (0);
 }
