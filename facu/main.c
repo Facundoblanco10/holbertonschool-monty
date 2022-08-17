@@ -14,6 +14,7 @@ void match_function(char *buf, int line, stack_t **head)
 	char *token2 = NULL;
 	instruction_t functions[] = {
 		{"push", push},
+		{"pall", pall},
 		{"\0", NULL}
 	};
 
@@ -33,8 +34,7 @@ void match_function(char *buf, int line, stack_t **head)
 					value = atoi(token2);
 			}
 			free(token1);
-			if (token2)
-				functions[i].f(head, line);
+			functions[i].f(head, line);
 			return;
 		}
 		i++;
@@ -76,7 +76,6 @@ int main(int argc, char * argv[])
 		line++;
 	}
 	fclose(name_of_file);
-	print_dlistint(head);
 
 	return (0);
 }
@@ -103,7 +102,6 @@ void push(stack_t **head, unsigned int line)
 	if ((*head) == NULL)
 	{
 		*head = n_node;
-		printf("%d\n", n_node->n);
 		return;
 	}
 	aux = (*head);
@@ -111,15 +109,15 @@ void push(stack_t **head, unsigned int line)
 	n_node->next = aux;
 	(*head) = n_node;
 }
-size_t print_dlistint(const stack_t *head)
+void pall(stack_t **head, unsigned int line)
 {
 	int c = 0;
 
-	while (head)
+	(void) line;
+	while (*head)
 	{
-		printf("%d\n", head->n);
+		printf("%d\n", (*head)->n);
 		c++;
-		head = head->next;
+		(*head) = (*head)->next;
 	}
-	return (c);
 }
