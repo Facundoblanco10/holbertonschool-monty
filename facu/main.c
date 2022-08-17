@@ -27,7 +27,7 @@ void match_function(char *buf, int line, stack_t **head)
 				token2 = strtok(NULL, " \t\n");
 				if (!token2)
 				{
-					printf("L%d: usage: push integer\n", line);
+					dprintf(2, "L%d: usage: push integer\n", line);
 					free(token2);
 				}
 				else
@@ -39,7 +39,7 @@ void match_function(char *buf, int line, stack_t **head)
 		}
 		i++;
 	}
-	printf("L%d: unknown instruction %s\n", line, token1);
+	dprintf(2, "L%d: unknown instruction %s\n", line, token1);
 	return;
 }
 /**
@@ -58,7 +58,7 @@ int main(int argc, char * argv[])
 
 	if (!argv[1])
 	{
-		printf("USAGE: monty file");
+		dprintf(2, "USAGE: monty file");
 		exit(EXIT_FAILURE);
 	}
 
@@ -66,7 +66,7 @@ int main(int argc, char * argv[])
 
 	if (name_of_file == NULL)
 	{
-		printf("Error: Can't open file %s\n", argv[1]);
+		dprintf(2, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
 	while (fgets(buf, len, name_of_file) != NULL)
@@ -93,7 +93,7 @@ void push(stack_t **head, unsigned int line)
 	n_node = malloc(sizeof(stack_t));
 	if (!n_node)
 	{
-		printf("Error: malloc failed");
+		dprintf(2, "Error: malloc failed");
 		exit(EXIT_FAILURE);
 	}
 	n_node->n = value;
