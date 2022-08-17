@@ -69,6 +69,7 @@ void push(stack_t **head, char *buf)
 	char *token1 = strtok(buf_dup, " \t");
 	char *token2 = strtok(NULL, " \t");
 	int value = atoi(token2);
+	stack_t *aux;
 	stack_t *n_node = malloc(sizeof(stack_t));
 
 	if (!n_node)
@@ -84,7 +85,8 @@ void push(stack_t **head, char *buf)
 		*head = n_node;
 		return;
 	}
-	(*head)->prev = n_node;
-	n_node->next =  (*head);
-
+	aux = (*head);
+	aux->prev = n_node;
+	n_node->next = aux;
+	(*head) = n_node;
 }
