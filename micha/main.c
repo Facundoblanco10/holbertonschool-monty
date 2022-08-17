@@ -1,21 +1,49 @@
 #include "monty.h"
+int value = 0;
+/**
+ *
+ *
+ *
+ *
+ */
+void match_function(char *buf, int line, stack_t **head)
+{
+	int i = 0;
+	char *buf_dup = strdup(buf);
+	char *token1 = strtok(buf_dup, " \t\n");
+	char *token2 = strtok(NULL, " \t\n");
+	instruction_t functions[] = {
+		{"push", push},
+		{"\0", NULL}
+	};
 
+	while (functions[i].opcode[0] != '\0')
+	{
+		if(strcmp(functions[i].opcode, token1) == 0)
+		{
+			if (strcmp(token1, "push") == 0)
+			{
+				value = atoi(token2);
+			}
+			functions[i].f(head, line);
+		}
+		i++;
+	}
+	printf("L%d: unknown instruction %s", line, token1);
+	return;
+}
 /**
  *
  *
  *
  */
-int main (int argc, char * argv[])
+int main(int argc, char * argv[])
 {
 	FILE *name_of_file;
 	int len = 255;
-	int value = 0;
-	int line = 1;
+	unsigned int line = 1;
 	char buf[256];
-	char *token1;
-	char *token2;
-	char *buf_dup;
-	stack_t **head = NULL;
+	stack_t *head = NULL;
 	(void)argc;
 
 	if (!argv[1])
@@ -34,44 +62,25 @@ int main (int argc, char * argv[])
 	while (fgets(buf, len, name_of_file) != NULL)
 	{
 		buf[256] = '\0';
-		match_function(buf, line);
+		match_function(buf, line, &head);
 		line++;
 	}
 	fclose(name_of_file);
 
 	return (0);
 }
-
-void match_function(char *buf, int line)
+/**
+ *
+ *
+ *
+ */
+void push(stack_t **head, unsigned int line)
 {
-	char buf_dup = strdup(buf);
-	char *token1 = strtok(buf_dup, " \t");
-	instruction_t functions[] = {
-		{"push", push()}
-		{"pall", pall()}
-		{"\0", NULL}
-	};
-
-	while (functions[i] != NULL)
-	{
-		if(strcmp(functions[i].opcode, token1) == 0)
-		{
-			functions[i].f(head, buf);
-			return;
-		}
-	}
-	printf("L%d: unknown instruction %s", line, token1);
-
-}
-void push(stack_t **head, char *buf)
-{
-	char buf_dup = strdup(buf);
-	char *token1 = strtok(buf_dup, " \t");
-	char *token2 = strtok(NULL, " \t");
-	int value = atoi(token2);
 	stack_t *aux;
-	stack_t *n_node = malloc(sizeof(stack_t));
+	stack_t *n_node;
+	(void)line;
 
+	n_node = malloc(sizeof(stack_t));
 	if (!n_node)
 	{
 		printf("Error: malloc failed");
@@ -80,7 +89,7 @@ void push(stack_t **head, char *buf)
 	n_node->n = value;
 	n_node->next = NULL;
 	n_node->prev = NULL;
-	if (*head = NULL)
+	if ((*head) == NULL)
 	{
 		*head = n_node;
 		return;

@@ -1,5 +1,3 @@
 push 1
-                                asfdf 2
-     			 push 1 odafhgwdiugwru
-     push 2
-pall 
+push 2
+push 5
