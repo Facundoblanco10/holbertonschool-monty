@@ -1,12 +1,9 @@
 push 1
 push 2
-push       3     
-      
-
-      push 4    
-pall   
-
-push 5 
-pall
-push 121 asla
+push
+push 0
+push 33
+asda
+aawww
+push 5  a sa
 pall

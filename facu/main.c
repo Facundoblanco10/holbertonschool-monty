@@ -1,16 +1,61 @@
 #include "monty.h"
+int value = 0;
+/**
+ *
+ *
+ *
+ *
+ */
+void match_function(char *buf, int line, stack_t **head)
+{
+	int i = 0;
+	char *buf_dup = strdup(buf);
+	char *token1 = strtok(buf_dup, " \t\n");
+	char *token2 = NULL;
+	instruction_t functions[] = {
+		{"push", push},
+		{"\0", NULL}
+	};
+
+	while (functions[i].opcode[0] != '\0')
+	{
+		if(strcmp(functions[i].opcode, token1) == 0)
+		{
+			if (strcmp(token1, "push") == 0)
+			{
+				token2 = strtok(NULL, " \t\n");
+				if (!token2)
+				{
+					printf("L%d: usage: push integer\n", line);
+					free(token2);
+				}
+				else
+					value = atoi(token2);
+			}
+			free(token1);
+			if (token2)
+				functions[i].f(head, line);
+			return;
+		}
+		i++;
+	}
+	printf("L%d: unknown instruction %s\n", line, token1);
+	return;
+}
 /**
  *
  *
  *
  */
-int main (int argc, char * argv[])
+int main(int argc, char * argv[])
 {
 	FILE *name_of_file;
+	int len = 255;
+	unsigned int line = 1;
 	char buf[256];
-	int len = 255, c = 0;
-
+	stack_t *head = NULL;
 	(void)argc;
+
 	if (!argv[1])
 	{
 		printf("USAGE: monty file");
@@ -21,78 +66,60 @@ int main (int argc, char * argv[])
 
 	if (name_of_file == NULL)
 	{
-		printf("Error to open the file");
+		printf("Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
-
 	while (fgets(buf, len, name_of_file) != NULL)
 	{
-		c++;
-		get_op(buf, c);
+		buf[256] = '\0';
+		match_function(buf, line, &head);
+		line++;
 	}
-
 	fclose(name_of_file);
+	print_dlistint(head);
 
 	return (0);
 }
-void get_op(char *buf, int c)
+/**
+ *
+ *
+ *
+ */
+void push(stack_t **head, unsigned int line)
 {
-	char *token1 = strtok(buf, " \t");
-	int val = 0;
-	stack_t *head;
+	stack_t *aux;
+	stack_t *n_node;
+	(void)line;
 
-	head = NULL;
-	if (!token1)
+	n_node = malloc(sizeof(stack_t));
+	if (!n_node)
+	{
+		printf("Error: malloc failed");
+		exit(EXIT_FAILURE);
+	}
+	n_node->n = value;
+	n_node->next = NULL;
+	n_node->prev = NULL;
+	if ((*head) == NULL)
+	{
+		*head = n_node;
+		printf("%d\n", n_node->n);
 		return;
-	if (strcmp(token1, "push") == 0)
-	{
-		val = push(buf, c);
-		if (val != 0)
-		{
-			create_node(&head, val);
-		}
 	}
-	printf("%s\n%d\n", token1, val);
-	printf("This is the line readed: %s\n", buf);
+	aux = (*head);
+	aux->prev = n_node;
+	n_node->next = aux;
+	(*head) = n_node;
 }
-int push(char *buf, int c)
+size_t print_dlistint(const stack_t *head)
 {
-	char *token2 = strtok(buf, " \t");
-	int val = 0;
+	int c = 0;
 
-	token2 = strtok(NULL, " \t");
-	if (token2[0] != '0')
+	while (head)
 	{
-		val = atoi(token2);
-		if (val == 0)
-		{
-			printf("L%d: usage: push integer", c);
-			exit(EXIT_FAILURE);
-		}
-		return(val);
+		printf("%d\n", head->n);
+		c++;
+		head = head->next;
 	}
-	return (0);
-}
-stack_t *create_node(stack_t **head, int val)
-{
-	stack_t *newnode;
-
-	newnode = malloc(sizeof(stack_t));
-	if (!newnode)
-		return (NULL);
-	newnode->n = val;
-	if (!(*head))
-	{
-		newnode->next = *head;
-		newnode->prev = NULL;
-		*head = newnode;
-	}
-	else
-	{
-		newnode->next = *head;
-		newnode->prev = NULL;
-		(*head)->prev = newnode;
-	}
-	*head = newnode;
-	return (newnode);
+	return (c);
 }

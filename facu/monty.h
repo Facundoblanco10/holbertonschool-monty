@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+extern int value;
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -33,8 +34,6 @@ typedef struct instruction_s
 char *opcode;
 void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
-int main (int argc, char * argv[]);
-void get_op(char *buf, int c);
-int push(char *buf, int c);
-stack_t *create_node(stack_t **head, int val);
+size_t print_dlistint(const stack_t *head);
+void push(stack_t **head, unsigned int line);
 #endif
