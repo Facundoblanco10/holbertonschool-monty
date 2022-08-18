@@ -1,9 +1,3 @@
-push 1
 push 2
-push
-push 0
-push 33
-asda
-aawww
-push 5  a sa
+push 3
 pall

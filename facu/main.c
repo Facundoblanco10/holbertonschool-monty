@@ -18,6 +18,8 @@ void match_function(char *buf, int line, stack_t **head)
 		{"\0", NULL}
 	};
 
+	if (!token1)
+		return;
 	while (functions[i].opcode[0] != '\0')
 	{
 		if(strcmp(functions[i].opcode, token1) == 0)
@@ -123,4 +125,3 @@ void pall(stack_t **head, unsigned int line)
 		(*head) = (*head)->next;
 	}
 }
-
