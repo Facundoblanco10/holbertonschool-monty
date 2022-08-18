@@ -29,6 +29,7 @@ void match_function(char *buf, int line, stack_t **head)
 				{
 					dprintf(2, "L%d: usage: push integer\n", line);
 					free(token2);
+					exit(EXIT_FAILURE);
 				}
 				else
 					value = atoi(token2);
@@ -40,6 +41,7 @@ void match_function(char *buf, int line, stack_t **head)
 		i++;
 	}
 	dprintf(2, "L%d: unknown instruction %s\n", line, token1);
+	exit(EXIT_FAILURE);
 	return;
 }
 /**
@@ -121,3 +123,4 @@ void pall(stack_t **head, unsigned int line)
 		(*head) = (*head)->next;
 	}
 }
+
