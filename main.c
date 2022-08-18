@@ -19,16 +19,13 @@ int match_function(char *buf, int line, stack_t **head)
 		{"pint", pint},
 		{"pop", pop},
 		{"swap", swap},
+		{"nop", nop},
+		{"add", add},
 		{"\0", NULL}
 	};
 
 	if (!token1)
 	{
-		return (0);
-	}
-	if (strcmp(token1, "nop") == 0)
-	{
-		free(token1);
 		free(buf_dup);
 		return (0);
 	}
@@ -173,6 +170,7 @@ void pint(stack_t **head, unsigned int line)
 	if (!(*head))
 	{
 		dprintf(2, "L%d: can't pint, stack empty\n", line);
+		exit(EXIT_FAILURE);
 	}
 	printf("%d\n", (*head)->n);
 }
@@ -183,6 +181,7 @@ void pop(stack_t **head, unsigned int line)
 	if (!(*head))
 	{
 		dprintf(2, "L%d: can't pop an empty stack\n", line);
+		exit(EXIT_FAILURE);
 	}
 	node = (*head);
 	(*head) = (*head)->next;
@@ -196,9 +195,29 @@ void swap(stack_t **head, unsigned int line)
 	if(!(*head) || !((*head)->next))
 	{
 		dprintf(2, "L%d: can't swap, stack too short\n", line);
+		exit(EXIT_FAILURE);
 	}
 	aux = (*head)->next;
 	num_aux = aux->n;
 	aux->n = (*head)->n;
 	(*head)->n = num_aux;
+}
+void add(stack_t **head, unsigned int line)
+{
+	stack_t *aux = (*head);
+	
+	if(!(*head) || !((*head)->next))
+	{
+		dprintf(2, "L%d: can't add, stack too short\n", line);
+		exit(EXIT_FAILURE);
+	}
+	(*head) = (*head)->next;
+	(*head)->n = (*head)->n + aux->n;
+	(*head)->prev = NULL;
+	free(aux);
+}
+void nop(stack_t **head, unsigned int line)
+{
+	(void)head;
+	(void)line;
 }
