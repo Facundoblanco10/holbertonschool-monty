@@ -138,38 +138,3 @@ void pall(stack_t **head, unsigned int line)
 }
 /*
 
-void pint(stack_t **head, unsigned int line)
-{
-	if(*head)
-	{
-		dprintf(2, "L%d: can't pint, stack empty\n", line);
-	}
-	printf("%d\n", (*head)->n);
-}
-void pop(stack_t **head, unsigned int line)
-{
-	stack_t *node;
-
-	if (*head)
-	{
-		dprintf(2, "L%d: can't pop an empty stack\n", line);
-	}
-	node = (*head);
-	(*head) = (*head)->next;
-	free(node);
-}
-void swap(stack_t **head, unsigned int line)
-{
-	unsigned int num_aux = 0;
-	stack_t *aux;
-
-	if(*head && (*head)->next)
-	{
-		dprintf(2, "L%d: can't swap, stack too short\n", line);
-	}
-	aux = (*head)->next;
-	num_aux = aux->n;
-	aux->n = (*head)->n;
-	(*head)->n = num_aux;
-}
-*/
