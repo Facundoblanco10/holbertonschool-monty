@@ -6,7 +6,7 @@ int value = 0;
  *
  *
  */
-void match_function(char *buf, int line, stack_t **head)
+int match_function(char *buf, int line, stack_t **head)
 {
 	size_t j = 0;
 	int i = 0;
@@ -20,7 +20,11 @@ void match_function(char *buf, int line, stack_t **head)
 	};
 
 	if (!token1)
-		return;
+	{
+		free(token1);
+		free(buf_dup);
+		return (0);
+	}
 	while (functions[i].opcode[0] != '\0')
 	{
 		if(strcmp(functions[i].opcode, token1) == 0)
@@ -31,8 +35,8 @@ void match_function(char *buf, int line, stack_t **head)
 				if (!token2)
 				{
 					dprintf(2, "L%d: usage: push integer\n", line);
-					free(token2);
-					exit(EXIT_FAILURE);
+					free(buf_dup);
+					return (-1);
 				}
 				else
 				{
@@ -46,19 +50,20 @@ void match_function(char *buf, int line, stack_t **head)
 					if (!value && strcmp(token2, "0") && strcmp(token2, "-0"))
 					{
 						dprintf(2, "L%d: usage: push integer\n", line);
-						exit(EXIT_FAILURE);
+						free(buf_dup);
+						return (-1);
 					}
 				}
 			}
-			free(token1);
 			functions[i].f(head, line);
-			return;
+			free(buf_dup);
+			return (0);
 		}
 		i++;
+		free(buf_dup);
 	}
 	dprintf(2, "L%d: unknown instruction %s\n", line, token1);
-	exit(EXIT_FAILURE);
-	return;
+	return (-1);
 }
 /**
  *
@@ -85,15 +90,22 @@ int main(int argc, char * argv[])
 	if (name_of_file == NULL)
 	{
 		dprintf(2, "Error: Can't open file %s\n", argv[1]);
+		fclose(name_of_file);
 		exit(EXIT_FAILURE);
 	}
 	while (fgets(buf, len, name_of_file) != NULL)
 	{
 		buf[256] = '\0';
-		match_function(buf, line, &head);
+		if (match_function(buf, line, &head) == -1)
+        {
+			fclose(name_of_file);
+			free_dlist(head);
+			exit(EXIT_FAILURE);
+        }
 		line++;
 	}
 	fclose(name_of_file);
+	free_dlist(head);
 
 	return (0);
 }
@@ -138,5 +150,16 @@ void pall(stack_t **head, unsigned int line)
 		printf("%d\n", print->n);
 		c++;
 		print = print->next;
+	}
+}
+void free_dlist(stack_t *head)
+{
+	stack_t *temp;
+
+	while (head)
+	{
+		temp = head->next;
+		free(head);
+		head = temp;
 	}
 }
