@@ -34,7 +34,14 @@ void match_function(char *buf, int line, stack_t **head)
 					exit(EXIT_FAILURE);
 				}
 				else
+				{
 					value = atoi(token2);
+					if (!value)
+					{
+						dprintf(2, "L%d: usage: push integer\n", line);
+						exit(EXIT_FAILURE);
+					}
+				}
 			}
 			free(token1);
 			functions[i].f(head, line);
@@ -62,7 +69,7 @@ int main(int argc, char * argv[])
 
 	if (!argv[1])
 	{
-		dprintf(2, "USAGE: monty file");
+		dprintf(2, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -116,12 +123,13 @@ void push(stack_t **head, unsigned int line)
 void pall(stack_t **head, unsigned int line)
 {
 	int c = 0;
+	stack_t *print = *head;
 
 	(void) line;
-	while (*head)
+	while (print)
 	{
-		printf("%d\n", (*head)->n);
+		printf("%d\n", print->n);
 		c++;
-		(*head) = (*head)->next;
+		print = print->next;
 	}
 }
