@@ -1,10 +1,11 @@
 #include "monty.h"
 int value = 0;
 /**
- *
- *
- *
- *
+ * match_function - find and execute the right function
+ * @buf: the instruction to execute
+ * @line: the number of line
+ * @head: a pointer to the first node of the stack_t
+ * Return: -1 if fails, and 0 in success
  */
 int match_function(char *buf, int line, stack_t **head)
 {
@@ -31,7 +32,7 @@ int match_function(char *buf, int line, stack_t **head)
 	}
 	while (functions[i].opcode[0] != '\0')
 	{
-		if(strcmp(functions[i].opcode, token1) == 0)
+		if (strcmp(functions[i].opcode, token1) == 0)
 		{
 			if (strcmp(token1, "push") == 0)
 			{
@@ -46,7 +47,7 @@ int match_function(char *buf, int line, stack_t **head)
 				{
 					for (j = 0; j < strlen(token2); j++)
 					{
-						if (!isdigit(token2[j]))
+						if (!(isdigit(token2[j])))
 							value = 0;
 						else if (j == strlen(token2) - 1)
 							value = atoi(token2);
@@ -69,11 +70,12 @@ int match_function(char *buf, int line, stack_t **head)
 	return (-1);
 }
 /**
- *
- *
- *
+ * main - the main function
+ * @argc: the leng of argv
+ * @argv: the arguments passed to main
+ * Return: always 0
  */
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
 	FILE *name_of_file;
 	int len = 255;
@@ -99,11 +101,11 @@ int main(int argc, char * argv[])
 	{
 		buf[256] = '\0';
 		if (match_function(buf, line, &head) == -1)
-        {
+	{
 			fclose(name_of_file);
 			free_stack(head);
 			exit(EXIT_FAILURE);
-        }
+	}
 		line++;
 	}
 	fclose(name_of_file);
