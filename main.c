@@ -24,6 +24,10 @@ int match_function(char *buf, int line, stack_t **head)
 
 	if (!token1)
 	{
+		return (0);
+	}
+	if (strcmp(token1, "nop") == 0)
+	{
 		free(token1);
 		free(buf_dup);
 		return (0);
