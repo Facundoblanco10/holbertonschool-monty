@@ -1,8 +1,8 @@
 #include "monty.h"
 /**
- *
- *
- *
+ * push -  pushes an element to the stack.
+ * @head: pointer to the first node in a list.
+ * @line: number of the line
  */
 void push(stack_t **head, unsigned int line)
 {
@@ -30,10 +30,9 @@ void push(stack_t **head, unsigned int line)
 	(*head) = n_node;
 }
 /**
- *
- *
- *
- *
+ * pall - prints the values on the stack starting from the top of the stack
+ * @head: pointer to the first node in a list.
+ * @line: number of the line.
  */
 void pall(stack_t **head, unsigned int line)
 {
@@ -49,9 +48,9 @@ void pall(stack_t **head, unsigned int line)
 	}
 }
 /**
- *
- *
- *
+ * nop - doesn’t do anything.
+ * @head: pointer to the first node in a list.
+ * @line: number of the line.
  */
 void nop(stack_t **head, unsigned int line)
 {

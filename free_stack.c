@@ -1,6 +1,6 @@
 #include "monty.h"
 /**
- * free_dlistint - free all the nodes in a list
+ * free_stack - free all the nodes in a list
  * @head: point to the first node in a list
  */
 void free_stack(stack_t *head)
