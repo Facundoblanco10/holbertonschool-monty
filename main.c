@@ -60,7 +60,6 @@ int match_function(char *buf, int line, stack_t **head)
 			return (0);
 		}
 		i++;
-		free(buf_dup);
 	}
 	dprintf(2, "L%d: unknown instruction %s\n", line, token1);
 	return (-1);
