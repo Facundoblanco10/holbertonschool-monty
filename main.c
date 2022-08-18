@@ -78,7 +78,7 @@ int main(int argc, char * argv[])
 	stack_t *head = NULL;
 	(void)argc;
 
-	if (!argv[1])
+	if (argc != 2)
 	{
 		dprintf(2, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
@@ -89,7 +89,6 @@ int main(int argc, char * argv[])
 	if (name_of_file == NULL)
 	{
 		dprintf(2, "Error: Can't open file %s\n", argv[1]);
-		fclose(name_of_file);
 		exit(EXIT_FAILURE);
 	}
 	while (fgets(buf, len, name_of_file) != NULL)
