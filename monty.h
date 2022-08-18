@@ -34,6 +34,13 @@ typedef struct instruction_s
 char *opcode;
 void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
-void pall(stack_t **head, unsigned int line);
+
 void push(stack_t **head, unsigned int line);
+void pall(stack_t **head, unsigned int line);
+void free_stack(stack_t *head);
+/*
+void pint(stack_t **head, unsigned int line);
+void pop(stack_t **head, unsigned int line);
+void swap(stack_t **head, unsigned int line);
+*/
 #endif

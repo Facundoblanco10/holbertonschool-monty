@@ -6,11 +6,11 @@ int value = 0;
  *
  *
  */
-void match_function(char *buf, int line, stack_t **head)
+int match_function(char *buf, int line, stack_t **head)
 {
 	int i = 0;
-	char *buf_dup = strdup(buf);
-	char *token1 = strtok(buf_dup, " \t\n");
+	char *buf_dup;
+	char *token1 = NULL;
 	char *token2 = NULL;
 	instruction_t functions[] = {
 		{"push", push},
@@ -18,33 +18,47 @@ void match_function(char *buf, int line, stack_t **head)
 		{"\0", NULL}
 	};
 
-	if (!token1)
-		return;
-	while (functions[i].opcode[0] != '\0')
+	if (!buf)
+		return (-1);
+	buf_dup = strdup(buf);
+	token1 = strtok(buf_dup, " \t\n");
+	while (functions[i].opcode[0] != '\0' && token1 != NULL)
 	{
 		if(strcmp(functions[i].opcode, token1) == 0)
 		{
-			if (strcmp(token1, "push") == 0)
+			if (i == 0)
 			{
 				token2 = strtok(NULL, " \t\n");
 				if (!token2)
 				{
 					dprintf(2, "L%d: usage: push integer\n", line);
 					free(token2);
+					free(token1);
+					free(buf_dup);
 					exit(EXIT_FAILURE);
 				}
-				else
+				else /*if(token2 es numero) */ 
 					value = atoi(token2);
+				/*
+				else
+				{
+					dprintf(2, "L%d: usage: push integer\n", line);
+					free(token1);
+					free(token2);
+					exit(EXIT_FAILURE);
+				}*/
+				
 			}
-			free(token1);
 			functions[i].f(head, line);
-			return;
+			free(buf_dup);
+			return (0);
 		}
 		i++;
 	}
 	dprintf(2, "L%d: unknown instruction %s\n", line, token1);
+	free(token1);
+	free(buf_dup);
 	exit(EXIT_FAILURE);
-	return;
 }
 /**
  *
@@ -58,16 +72,13 @@ int main(int argc, char * argv[])
 	unsigned int line = 1;
 	char buf[256];
 	stack_t *head = NULL;
-	(void)argc;
 
-	if (!argv[1])
+	if (argc != 2)
 	{
-		dprintf(2, "USAGE: monty file");
+		dprintf(2, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-
 	name_of_file = fopen(argv[1], "r");
-
 	if (name_of_file == NULL)
 	{
 		dprintf(2, "Error: Can't open file %s\n", argv[1]);
@@ -76,11 +87,17 @@ int main(int argc, char * argv[])
 	while (fgets(buf, len, name_of_file) != NULL)
 	{
 		buf[256] = '\0';
-		match_function(buf, line, &head);
+		if (match_function(buf, line, &head) == -1)
+		{
+			fclose(name_of_file);
+			/* hacer un free del sack &head */
+			return (1);
+		}
 		line++;
 	}
 	fclose(name_of_file);
-
+	/* hacer un free del sack */
+	free_stack(head);
 	return (0);
 }
 /**
@@ -90,7 +107,6 @@ int main(int argc, char * argv[])
  */
 void push(stack_t **head, unsigned int line)
 {
-	stack_t *aux;
 	stack_t *n_node;
 	(void)line;
 
@@ -103,25 +119,57 @@ void push(stack_t **head, unsigned int line)
 	n_node->n = value;
 	n_node->next = NULL;
 	n_node->prev = NULL;
-	if ((*head) == NULL)
+	if ((*head) != NULL)
 	{
-		*head = n_node;
-		return;
+		(*head)->prev = n_node;
+		n_node->next = (*head);
 	}
-	aux = (*head);
-	aux->prev = n_node;
-	n_node->next = aux;
 	(*head) = n_node;
 }
 void pall(stack_t **head, unsigned int line)
 {
-	int c = 0;
+	(void)line;
 
-	(void) line;
 	while (*head)
 	{
 		printf("%d\n", (*head)->n);
-		c++;
 		(*head) = (*head)->next;
 	}
 }
+/*
+
+void pint(stack_t **head, unsigned int line)
+{
+	if(*head)
+	{
+		dprintf(2, "L%d: can't pint, stack empty\n", line);
+	}
+	printf("%d\n", (*head)->n);
+}
+void pop(stack_t **head, unsigned int line)
+{
+	stack_t *node;
+
+	if (*head)
+	{
+		dprintf(2, "L%d: can't pop an empty stack\n", line);
+	}
+	node = (*head);
+	(*head) = (*head)->next;
+	free(node);
+}
+void swap(stack_t **head, unsigned int line)
+{
+	unsigned int num_aux = 0;
+	stack_t *aux;
+
+	if(*head && (*head)->next)
+	{
+		dprintf(2, "L%d: can't swap, stack too short\n", line);
+	}
+	aux = (*head)->next;
+	num_aux = aux->n;
+	aux->n = (*head)->n;
+	(*head)->n = num_aux;
+}
+*/
