@@ -8,6 +8,7 @@ int value = 0;
  */
 void match_function(char *buf, int line, stack_t **head)
 {
+	size_t j = 0;
 	int i = 0;
 	char *buf_dup = strdup(buf);
 	char *token1 = strtok(buf_dup, " \t\n");
@@ -35,8 +36,14 @@ void match_function(char *buf, int line, stack_t **head)
 				}
 				else
 				{
-					value = atoi(token2);
-					if (!value)
+					for (j = 0; j < strlen(token2); j++)
+					{
+						if (!isdigit(token2[j]))
+							value = 0;
+						else if (j == strlen(token2) - 1)
+							value = atoi(token2);
+					}
+					if (!value && strcmp(token2, "0") && strcmp(token2, "-0"))
 					{
 						dprintf(2, "L%d: usage: push integer\n", line);
 						exit(EXIT_FAILURE);
