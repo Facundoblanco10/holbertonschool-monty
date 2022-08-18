@@ -101,123 +101,13 @@ int main(int argc, char * argv[])
 		if (match_function(buf, line, &head) == -1)
         {
 			fclose(name_of_file);
-			free_dlist(head);
+			free_stack(head);
 			exit(EXIT_FAILURE);
         }
 		line++;
 	}
 	fclose(name_of_file);
-	free_dlist(head);
+	free_stack(head);
 
 	return (0);
-}
-/**
- *
- *
- *
- */
-void push(stack_t **head, unsigned int line)
-{
-	stack_t *aux;
-	stack_t *n_node;
-	(void)line;
-
-	n_node = malloc(sizeof(stack_t));
-	if (!n_node)
-	{
-		dprintf(2, "Error: malloc failed");
-		exit(EXIT_FAILURE);
-	}
-	n_node->n = value;
-	n_node->next = NULL;
-	n_node->prev = NULL;
-	if ((*head) == NULL)
-	{
-		*head = n_node;
-		return;
-	}
-	aux = (*head);
-	aux->prev = n_node;
-	n_node->next = aux;
-	(*head) = n_node;
-}
-void pall(stack_t **head, unsigned int line)
-{
-	int c = 0;
-	stack_t *print = *head;
-
-	(void) line;
-	while (print)
-	{
-		printf("%d\n", print->n);
-		c++;
-		print = print->next;
-	}
-}
-void free_dlist(stack_t *head)
-{
-	stack_t *temp;
-
-	while (head)
-	{
-		temp = head->next;
-		free(head);
-		head = temp;
-	}
-}
-void pint(stack_t **head, unsigned int line)
-{
-	if (!(*head))
-	{
-		dprintf(2, "L%d: can't pint, stack empty\n", line);
-		exit(EXIT_FAILURE);
-	}
-	printf("%d\n", (*head)->n);
-}
-void pop(stack_t **head, unsigned int line)
-{
-	stack_t *node;
-
-	if (!(*head))
-	{
-		dprintf(2, "L%d: can't pop an empty stack\n", line);
-		exit(EXIT_FAILURE);
-	}
-	node = (*head);
-	(*head) = (*head)->next;
-	free(node);
-}
-void swap(stack_t **head, unsigned int line)
-{
-	unsigned int num_aux = 0;
-	stack_t *aux;
-
-	if(!(*head) || !((*head)->next))
-	{
-		dprintf(2, "L%d: can't swap, stack too short\n", line);
-		exit(EXIT_FAILURE);
-	}
-	aux = (*head)->next;
-	num_aux = aux->n;
-	aux->n = (*head)->n;
-	(*head)->n = num_aux;
-}
-void add(stack_t **head, unsigned int line)
-{
-	stack_t *aux = (*head);
-	
-	if(!(*head) || !((*head)->next))
-	{
-		dprintf(2, "L%d: can't add, stack too short\n", line);
-		exit(EXIT_FAILURE);
-	}
-	(*head) = (*head)->next;
-	(*head)->n = (*head)->n + aux->n;
-	(*head)->prev = NULL;
-	free(aux);
-}
-void nop(stack_t **head, unsigned int line)
-{
-	(void)head;
-	(void)line;
 }
