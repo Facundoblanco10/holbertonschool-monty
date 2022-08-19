@@ -1,6 +1,47 @@
 #include "monty.h"
 int value = 0;
 /**
+ * setvalue - check if token2 is a number
+ * @token2: is the argument of the push instruction
+ * Return: void
+ */
+void setvalue(char *token2)
+{
+	size_t j = 0;
+
+	for (j = 0; j < strlen(token2); j++)
+	{
+		if (!(isdigit(token2[j])))
+			value = 0;
+		else if (j == strlen(token2) - 1)
+			value = atoi(token2);
+	}
+}
+/**
+ * ckecktoken2 - check if token2 is valid input
+ * @token2: the argument passed to push function
+ * @line: the actual line
+ * Return: return -1 if token2 is invalid
+ */
+int ckecktoken2(char *token2, int line)
+{
+	if (!token2)
+	{
+		dprintf(2, "L%d: usage: push integer\n", line);
+		return (-1);
+	}
+	else
+	{
+		setvalue(token2);
+		if (!value && strcmp(token2, "0") && strcmp(token2, "-0"))
+		{
+			dprintf(2, "L%d: usage: push integer\n", line);
+			return (-1);
+		}
+	}
+	return (0);
+}
+/**
  * match_function - find and execute the right function
  * @buf: the instruction to execute
  * @line: the number of line
@@ -9,11 +50,9 @@ int value = 0;
  */
 int match_function(char *buf, int line, stack_t **head)
 {
-	size_t j = 0;
 	int i = 0;
 	char *buf_dup = strdup(buf);
-	char *token1 = strtok(buf_dup, " \t\n");
-	char *token2 = NULL;
+	char *token1 = strtok(buf_dup, " \t\n"), *token2 = NULL;
 	instruction_t functions[] = {
 		{"push", push},
 		{"pall", pall},
@@ -37,27 +76,10 @@ int match_function(char *buf, int line, stack_t **head)
 			if (strcmp(token1, "push") == 0)
 			{
 				token2 = strtok(NULL, " \t\n");
-				if (!token2)
+				if (ckecktoken2(token2, line) == -1)
 				{
-					dprintf(2, "L%d: usage: push integer\n", line);
 					free(buf_dup);
 					return (-1);
-				}
-				else
-				{
-					for (j = 0; j < strlen(token2); j++)
-					{
-						if (!(isdigit(token2[j])))
-							value = 0;
-						else if (j == strlen(token2) - 1)
-							value = atoi(token2);
-					}
-					if (!value && strcmp(token2, "0") && strcmp(token2, "-0"))
-					{
-						dprintf(2, "L%d: usage: push integer\n", line);
-						free(buf_dup);
-						return (-1);
-					}
 				}
 			}
 			functions[i].f(head, line);
@@ -89,9 +111,7 @@ int main(int argc, char *argv[])
 		dprintf(2, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-
 	name_of_file = fopen(argv[1], "r");
-
 	if (name_of_file == NULL)
 	{
 		dprintf(2, "Error: Can't open file %s\n", argv[1]);
